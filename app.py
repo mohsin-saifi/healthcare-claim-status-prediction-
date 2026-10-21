@@ -53,19 +53,13 @@ st.markdown(
 
 @st.cache_resource
 def load_model():
-    hf_token = st.secrets.get("HF_TOKEN")
-
-    if not hf_token:
-        raise ValueError("HF_TOKEN missing hai. Streamlit Secrets check karein.")
-
     model_path = hf_hub_download(
         repo_id="mohsinsafi123/healthcare-claim-model",
         filename="random_forest_model_compressed.pkl",
-        token=False,
-        repo_type="model"
+        repo_type="model",
+        revision="main",
+        token=None
     )
-
-    
     return joblib.load(model_path)
 
 
