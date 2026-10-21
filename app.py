@@ -58,12 +58,12 @@ def load_model():
             "HF_TOKEN missing hai. Streamlit Settings > Secrets check karein."
         )
 
-    model_path = hf_hub_download(
-        repo_id="mohsinsafi123/healthcare-claim-model",
-        filename="random_forest_model_compressed.pkl",
-        token=hf_token,
-        repo_type="model"
-    )
+  model_path = hf_hub_download(
+    repo_id="mohsinsafi123/healthcare-claim-model",
+    filename="random_forest_model_compressed.pkl",
+    token=st.secrets["HF_TOKEN"],
+    repo_type="model"
+)
 
     return joblib.load(model_path)
 
