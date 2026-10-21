@@ -61,7 +61,7 @@ def load_model():
     model_path = hf_hub_download(
         repo_id="mohsinsafi123/healthcare-claim-model",
         filename="random_forest_model_compressed.pkl",
-        token=hf_token,
+        token=False,
         repo_type="model"
     )
 
