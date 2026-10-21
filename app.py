@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import joblib
+from huggingface_hub import hf_hub_download
 
 st.set_page_config(
     page_title="Healthcare Claim Prediction",
@@ -47,15 +48,20 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# ---------- Load Model ----------
+
 @st.cache_resource
 def load_model():
-    return joblib.load("random_forest_model.pkl")
+    model_path = hf_hub_download(
+        repo_id="mohsinsafi123/healthcare-claim-model",
+        filename="random_forest_model_compressed.pkl"
+    )
+    return joblib.load(model_path)
 
 try:
     model = load_model()
 except Exception as e:
-    st.error("Model load nahi hua. Check random_forest_model.pkl.")
+    st.error("Model load nahi hua.")
+    st.exception(e)
     st.stop()
 
 # ---------- Input Form ----------
