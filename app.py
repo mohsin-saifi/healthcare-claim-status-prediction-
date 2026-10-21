@@ -49,29 +49,30 @@ st.markdown(
 )
 
 
+
+
 @st.cache_resource
 def load_model():
     hf_token = st.secrets.get("HF_TOKEN")
 
     if not hf_token:
-        raise ValueError(
-            "HF_TOKEN missing hai. Streamlit Settings > Secrets check karein."
-        )
+        raise ValueError("HF_TOKEN missing hai. Streamlit Secrets check karein.")
 
-  model_path = hf_hub_download(
-    repo_id="mohsinsafi123/healthcare-claim-model",
-    filename="random_forest_model_compressed.pkl",
-    token=st.secrets["HF_TOKEN"],
-    repo_type="model"
-)
+    model_path = hf_hub_download(
+        repo_id="mohsinsafi123/healthcare-claim-model",
+        filename="random_forest_model_compressed.pkl",
+        token=hf_token,
+        repo_type="model"
+    )
 
+    
     return joblib.load(model_path)
 
 
 try:
     model = load_model()
 except Exception as e:
-    st.error("Model load nahi hua. Error details:")
+    st.error("Model load nahi hua.")
     st.exception(e)
     st.stop()
 
