@@ -53,7 +53,8 @@ st.markdown(
 def load_model():
     model_path = hf_hub_download(
         repo_id="mohsinsafi123/healthcare-claim-model",
-        filename="random_forest_model_compressed.pkl"
+        filename="random_forest_model_compressed.pkl",
+        token=st.secrets["HF_TOKEN"]
     )
     return joblib.load(model_path)
 
