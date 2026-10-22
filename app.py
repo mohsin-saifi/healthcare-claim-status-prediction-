@@ -49,24 +49,19 @@ st.markdown(
 )
 
 
-
-
+# ---------- Load Model ----------
 @st.cache_resource
 def load_model():
     model_path = hf_hub_download(
-        repo_id="mohsinsafi123/healthcare-claim-model",
-        filename="random_forest_model_compressed.pkl",
-        repo_type="model",
-        revision="main",
-        token=None
+        repo_id="mohsinsaifi123/healthcare-claim-model",
+        filename="random_forest_model_compressed.pkl"
     )
     return joblib.load(model_path)
-
 
 try:
     model = load_model()
 except Exception as e:
-    st.error("Model load nahi hua.")
+    st.error("Model load nahi hua. Check repository name and filename.")
     st.exception(e)
     st.stop()
 
