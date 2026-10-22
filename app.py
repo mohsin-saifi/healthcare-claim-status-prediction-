@@ -51,21 +51,21 @@ st.markdown(
 # ---------- Load Model via Official Hugging Face Hub ----------
 @st.cache_resource
 def load_model():
-    # hf_hub_download safely handles large LFS/Xet files from Hugging Face
+    print("STEP 1: Starting model download", flush=True)
+
     model_path = hf_hub_download(
         repo_id="mohsinsaifi123/healthcare-claim-model",
         filename="random_forest_model_compressed.pkl"
     )
-    return joblib.load(model_path)
 
-try:
-    with st.spinner("⏳ Downloading and loading AI Model... Please wait..."):
-        model = load_model()
-except Exception as e:
-    st.error("❌ Model load nahi ho pa raha hai.")
-    st.exception(e)
-    st.stop()
+    print("STEP 2: Download complete", flush=True)
+    print(f"Model path: {model_path}", flush=True)
 
+    print("STEP 3: Starting joblib.load", flush=True)
+    model = joblib.load(model_path)
+
+    print("STEP 4: Model loaded successfully", flush=True)
+    return model
 # ---------- Input Form ----------
 with st.form("claim_form"):
     st.subheader("📋 Claim Details")
