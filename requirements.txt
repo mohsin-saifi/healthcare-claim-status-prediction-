@@ -1,6 +1,6 @@
 streamlit
 pandas
-numpy<2
-scikit-learn==1.9.0
+numpy
+scikit-learn==1.6.1
 joblib
 huggingface_hub
