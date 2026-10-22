@@ -48,8 +48,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-
-# ---------- Load Model ----------
+# ---------- Load Model from Hugging Face ----------
 @st.cache_resource
 def load_model():
     model_path = hf_hub_download(
@@ -114,7 +113,7 @@ with st.form("claim_form"):
          "Coronary Artery Disease", "Diabetes",
          "Digestive Disorder", "Endometriosis", "Epilepsy",
          "Fever", "Fracture", "GERD", "Gastritis",
-         "Gastroenteritis", "Gynecological Infection",
+         "Gastroenteritis", "Gynecolgoical Infection", # Note: match exact spelling if needed
          "Heart Failure", "Hypertension", "IBS", "Infection",
          "Injury", "Joint Disorder", "Liver Disorder",
          "Lung Cancer", "Lymphoma", "Migraine", "Neuropathy",
@@ -133,8 +132,6 @@ with st.form("claim_form"):
     )
 
 # ---------- Prediction ----------
-# This block runs only after the button is clicked.
-# Therefore, refreshing the page won't use an undefined prediction.
 if submitted:
     try:
         input_data = {
@@ -143,7 +140,6 @@ if submitted:
             "collection_rate_pct": collection_rate_pct
         }
 
-        # Initialize all one-hot encoded columns.
         for col in model.feature_names_in_:
             if col not in input_data:
                 input_data[col] = 0
@@ -160,7 +156,6 @@ if submitted:
             if col in input_data:
                 input_data[col] = 1
 
-        # Keep the exact feature order used in training.
         input_df = pd.DataFrame(
             [input_data],
             columns=model.feature_names_in_
@@ -178,7 +173,6 @@ if submitted:
         else:
             st.warning(f"Predicted class: {prediction}")
 
-        # Display probabilities once only.
         if hasattr(model, "predict_proba"):
             probabilities = model.predict_proba(input_df)[0]
 
