@@ -50,12 +50,12 @@ st.markdown(
 # ---------- Load Model ----------
 @st.cache_resource
 def load_model():
-    return joblib.load("random_forest_light.pkl")
+    return joblib.load("random_forest_light2.pkl")
 
 try:
     model = load_model()
 except Exception as e:
-    st.error("Model load nahi hua. Check random_forest_light.pkl.")
+    st.error("Model load nahi hua. Check random_forest_light2.pkl.")
     st.stop()
 
 # ---------- Input Form ----------
