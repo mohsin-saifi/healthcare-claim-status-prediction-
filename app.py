@@ -66,6 +66,13 @@ def load_model():
 
     print("STEP 4: Model loaded successfully", flush=True)
     return model
+try:
+    with st.spinner("⏳ Downloading and loading AI Model... Please wait..."):
+        model = load_model()
+except Exception as e:
+    st.error("Model load nahi ho pa raha hai.")
+    st.exception(e)
+    st.stop()
 # ---------- Input Form ----------
 with st.form("claim_form"):
     st.subheader("📋 Claim Details")
