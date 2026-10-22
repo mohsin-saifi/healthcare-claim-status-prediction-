@@ -1,8 +1,7 @@
 import streamlit as st
 import pandas as pd
 import joblib
-import requests
-import os
+from huggingface_hub import hf_hub_download
 
 st.set_page_config(
     page_title="Healthcare Claim Prediction",
@@ -49,25 +48,18 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# ---------- Optimized RAM-Safe Model Loading ----------
+# ---------- Load Model via Official Hugging Face Hub ----------
 @st.cache_resource
 def load_model():
-    url = "https://huggingface.co/mohsinsaifi123/healthcare-claim-model/resolve/main/random_forest_model_compressed.pkl?download=true"
-    local_filename = "random_forest_model_compressed.pkl"
-    
-    # Agar file pehle se downloaded nahi hai toh chunks mein download karein
-    if not os.path.exists(local_filename):
-        with requests.get(url, stream=True) as r:
-            r.raise_for_status()
-            with open(local_filename, 'wb') as f:
-                for chunk in r.iter_content(chunk_size=8192):
-                    f.write(chunk)
-                    
-    # mmap_mode='r' RAM usage ko bahut kam kar deta hai (prevents crashing)
-    return joblib.load(local_filename, mmap_mode='r')
+    # hf_hub_download safely handles large LFS/Xet files from Hugging Face
+    model_path = hf_hub_download(
+        repo_id="mohsinsaifi123/healthcare-claim-model",
+        filename="random_forest_model_compressed.pkl"
+    )
+    return joblib.load(model_path)
 
 try:
-    with st.spinner("⏳ Loading AI Model safely... Please wait..."):
+    with st.spinner("⏳ Downloading and loading AI Model... Please wait..."):
         model = load_model()
 except Exception as e:
     st.error("❌ Model load nahi ho pa raha hai.")
