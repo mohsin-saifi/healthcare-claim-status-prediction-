@@ -1,7 +1,8 @@
 import streamlit as st
 import pandas as pd
 import joblib
-from huggingface_hub import hf_hub_download
+import requests
+import io
 
 st.set_page_config(
     page_title="Healthcare Claim Prediction",
@@ -48,19 +49,24 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# ---------- Load Model from Hugging Face ----------
+# ---------- Direct Download Model from HF ----------
 @st.cache_resource
 def load_model():
-    model_path = hf_hub_download(
-        repo_id="mohsinsaifi123/healthcare-claim-model",
-        filename="random_forest_model_compressed.pkl"
-    )
-    return joblib.load(model_path)
+    # Direct raw download URL for Hugging Face LFS / Xet storage
+    url = "https://huggingface.co/mohsinsaifi123/healthcare-claim-model/resolve/main/random_forest_model_compressed.pkl?download=true"
+    
+    response = requests.get(url, stream=True)
+    if response.status_code == 200:
+        model_bytes = io.BytesIO(response.content)
+        return joblib.load(model_bytes)
+    else:
+        raise ValueError(f"Model download failed with status code: {response.status_code}")
 
 try:
-    model = load_model()
+    with st.spinner("⏳ Loading AI Model from Hugging Face... Please wait..."):
+        model = load_model()
 except Exception as e:
-    st.error("Model load nahi hua. Check repository name and filename.")
+    st.error("❌ Model load nahi ho pa raha hai.")
     st.exception(e)
     st.stop()
 
@@ -113,7 +119,7 @@ with st.form("claim_form"):
          "Coronary Artery Disease", "Diabetes",
          "Digestive Disorder", "Endometriosis", "Epilepsy",
          "Fever", "Fracture", "GERD", "Gastritis",
-         "Gastroenteritis", "Gynecolgoical Infection", # Note: match exact spelling if needed
+         "Gastroenteritis", "Gynecological Infection",
          "Heart Failure", "Hypertension", "IBS", "Infection",
          "Injury", "Joint Disorder", "Liver Disorder",
          "Lung Cancer", "Lymphoma", "Migraine", "Neuropathy",
